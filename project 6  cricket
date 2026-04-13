@@ -1,0 +1,94 @@
+import java.util.*;
+
+public class CricketManagement {
+
+    static String[] playerName = new String[5];
+    static int[] runs = new int[5];
+    static int[] wickets = new int[5];
+    static int count = 0;
+
+    // Add Player
+    static void addPlayer(String name, int r, int w) {
+        if (count < playerName.length) {
+            playerName[count] = name;
+            runs[count] = r;
+            wickets[count] = w;
+            count++;
+            System.out.println("Player added successfully.");
+        } else {
+            System.out.println("Team is full!");
+        }
+    }
+
+    // View Players
+    static void viewPlayers() {
+        System.out.println("\n--- Player List ---");
+        for (int i = 0; i < count; i++) {
+            System.out.println("Name: " + playerName[i] +
+                               ", Runs: " + runs[i] +
+                               ", Wickets: " + wickets[i]);
+        }
+    }
+
+    // Search Player
+    static void searchPlayer(String name) {
+        for (int i = 0; i < count; i++) {
+            if (playerName[i].equals(name)) {
+                System.out.println("Found: " + playerName[i] +
+                                   ", Runs: " + runs[i] +
+                                   ", Wickets: " + wickets[i]);
+                return;
+            }
+        }
+        System.out.println("Player not found!");
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice, r, w;
+        String name;
+
+        do {
+            System.out.println("\n--- Cricket Management System ---");
+            System.out.println("1. Add Player");
+            System.out.println("2. View Players");
+            System.out.println("3. Search Player");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter player name: ");
+                    name = sc.next();
+                    System.out.print("Enter runs: ");
+                    r = sc.nextInt();
+                    System.out.print("Enter wickets: ");
+                    w = sc.nextInt();
+                    addPlayer(name, r, w);
+                    break;
+
+                case 2:
+                    viewPlayers();
+                    break;
+
+                case 3:
+                    System.out.print("Enter player name to search: ");
+                    name = sc.next();
+                    searchPlayer(name);
+                    break;
+
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 4);
+
+        sc.close();
+    }
+}
