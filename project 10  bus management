@@ -1,0 +1,122 @@
+import java.util.*;
+
+// Bus Class
+class Bus {
+    private int busNo;
+    private boolean ac;
+    private int capacity;
+
+    Bus(int busNo, boolean ac, int capacity) {
+        this.busNo = busNo;
+        this.ac = ac;
+        this.capacity = capacity;
+    }
+
+    public int getBusNo() {
+        return busNo;
+    }
+
+    public boolean isAc() {
+        return ac;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void displayBusInfo() {
+        System.out.println("Bus No: " + busNo +
+                " | AC: " + (ac ? "Yes" : "No") +
+                " | Capacity: " + capacity);
+    }
+}
+
+// Booking Class
+class Booking {
+    String passengerName;
+    int busNo;
+    Date date;
+
+    Booking() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter Passenger Name: ");
+        passengerName = scanner.nextLine();
+
+        System.out.print("Enter Bus Number: ");
+        busNo = scanner.nextInt();
+
+        System.out.print("Enter Date (dd-mm-yyyy): ");
+        String dateInput = scanner.next();
+        date = new Date(dateInput);
+    }
+
+    public boolean isAvailable(ArrayList<Booking> bookings, ArrayList<Bus> buses) {
+        int capacity = 0;
+
+        for (Bus bus : buses) {
+            if (bus.getBusNo() == busNo) {
+                capacity = bus.getCapacity();
+                break;
+            }
+        }
+
+        int booked = 0;
+        for (Booking b : bookings) {
+            if (b.busNo == busNo && b.date.equals(date)) {
+                booked++;
+            }
+        }
+
+        return booked < capacity;
+    }
+}
+
+// Main Class
+public class BusReservationSystem {
+    public static void main(String[] args) {
+        ArrayList<Bus> buses = new ArrayList<>();
+        ArrayList<Booking> bookings = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        // Adding Bus Details
+        buses.add(new Bus(101, true, 2));
+        buses.add(new Bus(102, false, 3));
+        buses.add(new Bus(103, true, 4));
+
+        int userOption = 1;
+
+        System.out.println("===== WELCOME TO BUS RESERVATION SYSTEM =====");
+
+        while (userOption == 1) {
+            System.out.println("\nAvailable Buses:");
+            for (Bus bus : buses) {
+                bus.displayBusInfo();
+            }
+
+            System.out.println("\n1. Book Ticket");
+            System.out.println("2. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                Booking booking = new Booking();
+
+                if (booking.isAvailable(bookings, buses)) {
+                    bookings.add(booking);
+                    System.out.println("✅ Booking Confirmed!");
+                } else {
+                    System.out.println("❌ Sorry! Bus is full.");
+                }
+            } else {
+                System.out.println("Thank you for using the Bus Reservation System!");
+                break;
+            }
+
+            System.out.print("\nDo you want to continue? (1-Yes, 2-No): ");
+            userOption = scanner.nextInt();
+        }
+
+        scanner.close();
+    }
+}
