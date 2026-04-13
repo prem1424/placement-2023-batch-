@@ -1,0 +1,177 @@
+import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+// Doctor Class
+class Doctor {
+    private int doctorId;
+    private String name;
+    private String specialization;
+    private int maxPatientsPerDay;
+
+    Doctor(int doctorId, String name, String specialization, int maxPatientsPerDay) {
+        this.doctorId = doctorId;
+        this.name = name;
+        this.specialization = specialization;
+        this.maxPatientsPerDay = maxPatientsPerDay;
+    }
+
+    public int getDoctorId() {
+        return doctorId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public int getMaxPatientsPerDay() {
+        return maxPatientsPerDay;
+    }
+
+    public void displayDoctorInfo() {
+        System.out.println("Doctor ID: " + doctorId +
+                " | Name: Dr. " + name +
+                " | Specialization: " + specialization +
+                " | Max Patients/Day: " + maxPatientsPerDay);
+    }
+}
+
+// Appointment Class
+class Appointment {
+    String patientName;
+    int doctorId;
+    Date appointmentDate;
+
+    static Scanner scanner = new Scanner(System.in);
+
+    Appointment() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+
+        System.out.print("Enter Patient Name: ");
+        patientName = scanner.nextLine();
+
+        System.out.print("Enter Doctor ID: ");
+        doctorId = scanner.nextInt();
+
+        while (true) {
+            try {
+                System.out.print("Enter Appointment Date (dd-MM-yyyy): ");
+                String dateInput = scanner.next();
+                appointmentDate = dateFormat.parse(dateInput);
+                break;
+            } catch (ParseException e) {
+                System.out.println("Invalid date format. Please try again.");
+            }
+        }
+        scanner.nextLine(); // Clear buffer
+    }
+
+    public boolean isAvailable(ArrayList<Appointment> appointments,
+                               ArrayList<Doctor> doctors) {
+        int capacity = 0;
+
+        for (Doctor doctor : doctors) {
+            if (doctor.getDoctorId() == doctorId) {
+                capacity = doctor.getMaxPatientsPerDay();
+                break;
+            }
+        }
+
+        if (capacity == 0) {
+            System.out.println("Doctor not found!");
+            return false;
+        }
+
+        int bookedCount = 0;
+        for (Appointment appt : appointments) {
+            if (appt.doctorId == doctorId &&
+                appt.appointmentDate.equals(appointmentDate)) {
+                bookedCount++;
+            }
+        }
+
+        return bookedCount < capacity;
+    }
+}
+
+// Main Class
+public class HospitalManagementSystem {
+    public static void main(String[] args) {
+        ArrayList<Doctor> doctors = new ArrayList<>();
+        ArrayList<Appointment> appointments = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        // Adding Doctor Details
+        doctors.add(new Doctor(1, "Ramesh", "Cardiologist", 3));
+        doctors.add(new Doctor(2, "Priya", "Dermatologist", 2));
+        doctors.add(new Doctor(3, "Arun", "Orthopedic", 4));
+        doctors.add(new Doctor(4, "Lakshmi", "Pediatrician", 3));
+
+        int userOption = 1;
+
+        System.out.println("===== WELCOME TO HOSPITAL MANAGEMENT SYSTEM =====");
+
+        while (userOption == 1) {
+            System.out.println("\nMenu:");
+            System.out.println("1. View Doctors");
+            System.out.println("2. Book Appointment");
+            System.out.println("3. View Appointments");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("\nAvailable Doctors:");
+                    for (Doctor doctor : doctors) {
+                        doctor.displayDoctorInfo();
+                    }
+                    break;
+
+                case 2:
+                    scanner.nextLine(); // Clear buffer
+                    Appointment appointment = new Appointment();
+
+                    if (appointment.isAvailable(appointments, doctors)) {
+                        appointments.add(appointment);
+                        System.out.println("✅ Appointment Booked Successfully!");
+                    } else {
+                        System.out.println("❌ No available slots for the selected doctor.");
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("\nBooked Appointments:");
+                    if (appointments.isEmpty()) {
+                        System.out.println("No appointments found.");
+                    } else {
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                        for (Appointment appt : appointments) {
+                            System.out.println("Patient Name: " + appt.patientName +
+                                    " | Doctor ID: " + appt.doctorId +
+                                    " | Date: " + sdf.format(appt.appointmentDate));
+                        }
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("Thank you for using the Hospital Management System!");
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+
+            System.out.print("\nDo you want to continue? (1-Yes, 2-No): ");
+            userOption = scanner.nextInt();
+        }
+
+        scanner.close();
+    }
+}
