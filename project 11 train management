@@ -1,0 +1,152 @@
+import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+// Train Class
+class Train {
+    private int trainNo;
+    private String trainName;
+    private boolean ac;
+    private int capacity;
+
+    Train(int trainNo, String trainName, boolean ac, int capacity) {
+        this.trainNo = trainNo;
+        this.trainName = trainName;
+        this.ac = ac;
+        this.capacity = capacity;
+    }
+
+    public int getTrainNo() {
+        return trainNo;
+    }
+
+    public String getTrainName() {
+        return trainName;
+    }
+
+    public boolean isAc() {
+        return ac;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void displayTrainInfo() {
+        System.out.println(
+            "Train No: " + trainNo +
+            " | Name: " + trainName +
+            " | AC: " + (ac ? "Yes" : "No") +
+            " | Capacity: " + capacity
+        );
+    }
+}
+
+// Reservation Class
+class Reservation {
+    String passengerName;
+    int trainNo;
+    Date travelDate;
+    static Scanner scanner = new Scanner(System.in);
+
+    Reservation() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false);
+
+        System.out.print("Enter Passenger Name: ");
+        passengerName = scanner.nextLine();
+
+        System.out.print("Enter Train Number: ");
+        trainNo = scanner.nextInt();
+
+        while (true) {
+            try {
+                System.out.print("Enter Travel Date (dd-MM-yyyy): ");
+                String dateInput = scanner.next();
+                travelDate = dateFormat.parse(dateInput);
+                break;
+            } catch (ParseException e) {
+                System.out.println("Invalid date format. Please try again.");
+            }
+        }
+        scanner.nextLine(); // Clear buffer
+    }
+
+    public boolean isAvailable(ArrayList<Reservation> reservations,
+                               ArrayList<Train> trains) {
+        int capacity = 0;
+
+        for (Train train : trains) {
+            if (train.getTrainNo() == trainNo) {
+                capacity = train.getCapacity();
+                break;
+            }
+        }
+
+        if (capacity == 0) {
+            System.out.println("Train not found!");
+            return false;
+        }
+
+        int bookedSeats = 0;
+        for (Reservation r : reservations) {
+            if (r.trainNo == trainNo &&
+                r.travelDate.equals(travelDate)) {
+                bookedSeats++;
+            }
+        }
+
+        return bookedSeats < capacity;
+    }
+}
+
+// Main Class
+public class TrainReservationSystem {
+    public static void main(String[] args) {
+        ArrayList<Train> trains = new ArrayList<>();
+        ArrayList<Reservation> reservations = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        // Adding Train Details
+        trains.add(new Train(12001, "Shatabdi Express", true, 2));
+        trains.add(new Train(12627, "Karnataka Express", true, 3));
+        trains.add(new Train(16723, "Anantapuri Express", false, 4));
+
+        int userOption = 1;
+
+        System.out.println("===== WELCOME TO TRAIN RESERVATION SYSTEM =====");
+
+        while (userOption == 1) {
+            System.out.println("\nAvailable Trains:");
+            for (Train train : trains) {
+                train.displayTrainInfo();
+            }
+
+            System.out.println("\n1. Book Ticket");
+            System.out.println("2. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                scanner.nextLine(); // Clear newline
+                Reservation reservation = new Reservation();
+
+                if (reservation.isAvailable(reservations, trains)) {
+                    reservations.add(reservation);
+                    System.out.println("✅ Reservation Confirmed!");
+                } else {
+                    System.out.println("❌ Sorry! No seats available.");
+                }
+            } else {
+                System.out.println("Thank you for using the Train Reservation System!");
+                break;
+            }
+
+            System.out.print("\nDo you want to continue? (1-Yes, 2-No): ");
+            userOption = scanner.nextInt();
+            scanner.nextLine(); // Clear buffer
+        }
+
+        scanner.close();
+    }
+}
