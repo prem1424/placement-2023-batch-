@@ -1,69 +1,179 @@
 import java.util.*;
 
-public class OnlineShopping {
+public class OnlineShoppingSystem {
 
-    static String[] items = new String[10];
-    static int[] price = new int[10];
+    static int[] id = new int[100];
+    static String[] name = new String[100];
+    static int[] price = new int[100];
     static int count = 0;
-    static int total = 0;
+    static int totalBill = 0;
 
-    static void addItem(String name, int p) {
-        items[count] = name;
+    // Add Item
+    static void addItem(int i, String n, int p) {
+        if (count >= 100) {
+            System.out.println("Storage Full!");
+            return;
+        }
+
+        // check duplicate ID
+        for (int j = 0; j < count; j++) {
+            if (id[j] == i) {
+                System.out.println("Item ID already exists!");
+                return;
+            }
+        }
+
+        id[count] = i;
+        name[count] = n;
         price[count] = p;
         count++;
-        System.out.println("Item added.");
+
+        System.out.println("Item added successfully.");
     }
 
+    // View Items
     static void viewItems() {
+        if (count == 0) {
+            System.out.println("No items available.");
+            return;
+        }
+
+        System.out.println("\n--- Item List ---");
         for (int i = 0; i < count; i++) {
-            System.out.println(i + " " + items[i] + " Rs." + price[i]);
+            System.out.println("ID: " + id[i] +
+                    " | Name: " + name[i] +
+                    " | Price: " + price[i]);
         }
     }
 
-    static void buyItem(int index) {
-        if (index < count) {
-            total += price[index];
-            System.out.println("Item purchased.");
-        } else {
-            System.out.println("Invalid item.");
+    // Search Item
+    static void searchItem(int i) {
+        for (int j = 0; j < count; j++) {
+            if (id[j] == i) {
+                System.out.println("Item Found:");
+                System.out.println("Name: " + name[j] + ", Price: " + price[j]);
+                return;
+            }
         }
+        System.out.println("Item not found!");
     }
 
-    static void deleteItem(int index) {
-        for (int i = index; i < count - 1; i++) {
-            items[i] = items[i + 1];
-            price[i] = price[i + 1];
+    // Update Item
+    static void updateItem(int i, int newPrice) {
+        for (int j = 0; j < count; j++) {
+            if (id[j] == i) {
+                price[j] = newPrice;
+                System.out.println("Item price updated.");
+                return;
+            }
         }
-        count--;
-        System.out.println("Item deleted.");
+        System.out.println("Item not found!");
+    }
+
+    // Delete Item
+    static void deleteItem(int i) {
+        for (int j = 0; j < count; j++) {
+            if (id[j] == i) {
+                for (int k = j; k < count - 1; k++) {
+                    id[k] = id[k + 1];
+                    name[k] = name[k + 1];
+                    price[k] = price[k + 1];
+                }
+                count--;
+                System.out.println("Item deleted.");
+                return;
+            }
+        }
+        System.out.println("Item not found!");
+    }
+
+    // Buy Item
+    static void buyItem(int i) {
+        for (int j = 0; j < count; j++) {
+            if (id[j] == i) {
+                totalBill += price[j];
+                System.out.println(name[j] + " purchased successfully.");
+                return;
+            }
+        }
+        System.out.println("Item not found!");
+    }
+
+    // Show Bill
+    static void showBill() {
+        System.out.println("Total Bill = " + totalBill);
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int ch;
+        int choice;
 
         do {
-            System.out.println("\n1.Add Item 2.View 3.Buy 4.Delete 5.Bill 6.Exit");
-            ch = sc.nextInt();
+            System.out.println("\n===== ONLINE SHOPPING SYSTEM =====");
+            System.out.println("1. Add Item");
+            System.out.println("2. View Items");
+            System.out.println("3. Search Item");
+            System.out.println("4. Update Item Price");
+            System.out.println("5. Delete Item");
+            System.out.println("6. Buy Item");
+            System.out.println("7. View Bill");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice: ");
 
-            switch (ch) {
+            choice = sc.nextInt();
+
+            switch (choice) {
                 case 1:
-                    addItem(sc.next(), sc.nextInt());
+                    System.out.print("Enter ID: ");
+                    int id = sc.nextInt();
+                    System.out.print("Enter Name: ");
+                    String name = sc.next();
+                    System.out.print("Enter Price: ");
+                    int price = sc.nextInt();
+                    addItem(id, name, price);
                     break;
+
                 case 2:
                     viewItems();
                     break;
+
                 case 3:
-                    buyItem(sc.nextInt());
+                    System.out.print("Enter ID to search: ");
+                    searchItem(sc.nextInt());
                     break;
+
                 case 4:
+                    System.out.print("Enter ID: ");
+                    int uid = sc.nextInt();
+                    System.out.print("Enter new price: ");
+                    int np = sc.nextInt();
+                    updateItem(uid, np);
+                    break;
+
+                case 5:
+                    System.out.print("Enter ID to delete: ");
                     deleteItem(sc.nextInt());
                     break;
-                case 5:
-                    System.out.println("Total Bill = " + total);
+
+                case 6:
+                    System.out.print("Enter ID to buy: ");
+                    buyItem(sc.nextInt());
                     break;
+
+                case 7:
+                    showBill();
+                    break;
+
+                case 8:
+                    System.out.println("Thank you for using system!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
             }
 
-        } while (ch != 6);
+        } while (choice != 8);
+
+        sc.close();
     }
 }
