@@ -1,0 +1,90 @@
+import java.util.*;
+
+public class StockManagement {
+
+    static String[] items = new String[5];
+    static int[] quantity = new int[5];
+    static int count = 0;
+
+    // Add Item
+    static void addItem(String name, int qty) {
+        if (count < items.length) {
+            items[count] = name;
+            quantity[count] = qty;
+            count++;
+            System.out.println("Item added successfully.");
+        } else {
+            System.out.println("Stock is full!");
+        }
+    }
+
+    // Update Item
+    static void updateItem(String name, int qty) {
+        for (int i = 0; i < count; i++) {
+            if (items[i].equals(name)) {
+                quantity[i] += qty;
+                System.out.println("Stock updated.");
+                return;
+            }
+        }
+        System.out.println("Item not found!");
+    }
+
+    // View Items
+    static void viewItems() {
+        System.out.println("\n--- Stock List ---");
+        for (int i = 0; i < count; i++) {
+            System.out.println(items[i] + " : " + quantity[i]);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        String name;
+        int qty;
+
+        do {
+            System.out.println("\n--- Stock Management System ---");
+            System.out.println("1. Add Item");
+            System.out.println("2. Update Stock");
+            System.out.println("3. View Stock");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter item name: ");
+                    name = sc.next();
+                    System.out.print("Enter quantity: ");
+                    qty = sc.nextInt();
+                    addItem(name, qty);
+                    break;
+
+                case 2:
+                    System.out.print("Enter item name: ");
+                    name = sc.next();
+                    System.out.print("Enter quantity to add: ");
+                    qty = sc.nextInt();
+                    updateItem(name, qty);
+                    break;
+
+                case 3:
+                    viewItems();
+                    break;
+
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 4);
+
+        sc.close();
+    }
+}
