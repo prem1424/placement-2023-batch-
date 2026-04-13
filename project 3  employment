@@ -1,0 +1,119 @@
+import java.util.*;
+
+public class EmployeeManagement {
+
+    static int[] empId = new int[5];
+    static String[] empName = new String[5];
+    static double[] empSalary = new double[5];
+    static int count = 0;
+
+    // Add Employee
+    static void addEmployee(int id, String name, double salary) {
+        if (count < empId.length) {
+            empId[count] = id;
+            empName[count] = name;
+            empSalary[count] = salary;
+            count++;
+            System.out.println("Employee added successfully.");
+        } else {
+            System.out.println("Employee list is full!");
+        }
+    }
+
+    // View Employees
+    static void viewEmployees() {
+        System.out.println("\n--- Employee List ---");
+        for (int i = 0; i < count; i++) {
+            System.out.println("ID: " + empId[i] + 
+                               ", Name: " + empName[i] + 
+                               ", Salary: " + empSalary[i]);
+        }
+    }
+
+    // Search Employee
+    static void searchEmployee(int id) {
+        for (int i = 0; i < count; i++) {
+            if (empId[i] == id) {
+                System.out.println("Found: ID=" + empId[i] + 
+                                   ", Name=" + empName[i] + 
+                                   ", Salary=" + empSalary[i]);
+                return;
+            }
+        }
+        System.out.println("Employee not found!");
+    }
+
+    // Delete Employee
+    static void deleteEmployee(int id) {
+        for (int i = 0; i < count; i++) {
+            if (empId[i] == id) {
+                for (int j = i; j < count - 1; j++) {
+                    empId[j] = empId[j + 1];
+                    empName[j] = empName[j + 1];
+                    empSalary[j] = empSalary[j + 1];
+                }
+                count--;
+                System.out.println("Employee deleted.");
+                return;
+            }
+        }
+        System.out.println("Employee not found!");
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice, id;
+        String name;
+        double salary;
+
+        do {
+            System.out.println("\n--- Employee Management System ---");
+            System.out.println("1. Add Employee");
+            System.out.println("2. View Employees");
+            System.out.println("3. Search Employee");
+            System.out.println("4. Delete Employee");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter ID: ");
+                    id = sc.nextInt();
+                    System.out.print("Enter Name: ");
+                    name = sc.next();
+                    System.out.print("Enter Salary: ");
+                    salary = sc.nextDouble();
+                    addEmployee(id, name, salary);
+                    break;
+
+                case 2:
+                    viewEmployees();
+                    break;
+
+                case 3:
+                    System.out.print("Enter ID to search: ");
+                    id = sc.nextInt();
+                    searchEmployee(id);
+                    break;
+
+                case 4:
+                    System.out.print("Enter ID to delete: ");
+                    id = sc.nextInt();
+                    deleteEmployee(id);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
