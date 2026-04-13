@@ -1,0 +1,143 @@
+import java.util.*;
+
+public class SchoolManagement {
+
+    static int[] rollNo = new int[10];
+    static String[] name = new String[10];
+    static int[] marks = new int[10];
+    static int count = 0;
+
+    // Add Student
+    static void addStudent(int r, String n, int m) {
+        if (count < 10) {
+            rollNo[count] = r;
+            name[count] = n;
+            marks[count] = m;
+            count++;
+            System.out.println("Student added successfully.");
+        } else {
+            System.out.println("No space to add more students.");
+        }
+    }
+
+    // View Students
+    static void viewStudents() {
+        if (count == 0) {
+            System.out.println("No records found.");
+            return;
+        }
+        System.out.println("\n--- Student List ---");
+        for (int i = 0; i < count; i++) {
+            System.out.println("Roll: " + rollNo[i] +
+                               ", Name: " + name[i] +
+                               ", Marks: " + marks[i]);
+        }
+    }
+
+    // Search Student
+    static void searchStudent(int r) {
+        for (int i = 0; i < count; i++) {
+            if (rollNo[i] == r) {
+                System.out.println("Found -> Roll: " + rollNo[i] +
+                                   ", Name: " + name[i] +
+                                   ", Marks: " + marks[i]);
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    // Update Student
+    static void updateStudent(int r, int newMarks) {
+        for (int i = 0; i < count; i++) {
+            if (rollNo[i] == r) {
+                marks[i] = newMarks;
+                System.out.println("Marks updated.");
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    // Delete Student
+    static void deleteStudent(int r) {
+        for (int i = 0; i < count; i++) {
+            if (rollNo[i] == r) {
+                for (int j = i; j < count - 1; j++) {
+                    rollNo[j] = rollNo[j + 1];
+                    name[j] = name[j + 1];
+                    marks[j] = marks[j + 1];
+                }
+                count--;
+                System.out.println("Student deleted.");
+                return;
+            }
+        }
+        System.out.println("Student not found.");
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice, r, m;
+        String n;
+
+        do {
+            System.out.println("\n--- School Management System ---");
+            System.out.println("1. Add Student");
+            System.out.println("2. View Students");
+            System.out.println("3. Search Student");
+            System.out.println("4. Update Marks");
+            System.out.println("5. Delete Student");
+            System.out.println("6. Exit");
+            System.out.print("Enter choice: ");
+
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Roll No: ");
+                    r = sc.nextInt();
+                    System.out.print("Enter Name: ");
+                    n = sc.next();
+                    System.out.print("Enter Marks: ");
+                    m = sc.nextInt();
+                    addStudent(r, n, m);
+                    break;
+
+                case 2:
+                    viewStudents();
+                    break;
+
+                case 3:
+                    System.out.print("Enter Roll No to search: ");
+                    r = sc.nextInt();
+                    searchStudent(r);
+                    break;
+
+                case 4:
+                    System.out.print("Enter Roll No: ");
+                    r = sc.nextInt();
+                    System.out.print("Enter new Marks: ");
+                    m = sc.nextInt();
+                    updateStudent(r, m);
+                    break;
+
+                case 5:
+                    System.out.print("Enter Roll No to delete: ");
+                    r = sc.nextInt();
+                    deleteStudent(r);
+                    break;
+
+                case 6:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 6);
+
+        sc.close();
+    }
+}
