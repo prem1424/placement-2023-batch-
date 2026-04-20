@@ -1,0 +1,151 @@
+import java.util.*;
+
+// Equipment class
+class Equipment {
+    int id;
+    String name;
+    int total;
+    int available;
+
+    Equipment(int id, String name, int total) {
+        this.id = id;
+        this.name = name;
+        this.total = total;
+        this.available = total;
+    }
+
+    void display() {
+        System.out.println("ID: " + id +
+                "  Name: " + name +
+                "  Available: " + available + "/" + total);
+    }
+}
+
+// Main class
+public class LabManagementSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Equipment> list = new ArrayList<>();
+
+        while (true) {
+            System.out.println("\n--- LAB MANAGEMENT SYSTEM ---");
+            System.out.println("1. Add Equipment");
+            System.out.println("2. Display Equipment");
+            System.out.println("3. Search Equipment");
+            System.out.println("4. Allocate Equipment");
+            System.out.println("5. Return Equipment");
+            System.out.println("6. Exit");
+            System.out.print("Enter choice: ");
+
+            int choice = sc.nextInt();
+
+            if (choice == 1) {
+                System.out.print("Enter Equipment ID: ");
+                int id = sc.nextInt();
+
+                System.out.print("Enter Equipment Name: ");
+                String name = sc.next();
+
+                System.out.print("Enter Quantity: ");
+                int qty = sc.nextInt();
+
+                list.add(new Equipment(id, name, qty));
+                System.out.println("Equipment added successfully!");
+            }
+
+            else if (choice == 2) {
+                if (list.isEmpty()) {
+                    System.out.println("No equipment available.");
+                } else {
+                    System.out.println("\nEquipment List:");
+                    for (Equipment e : list) {
+                        e.display();
+                    }
+                }
+            }
+
+            else if (choice == 3) {
+                System.out.print("Enter Equipment ID to search: ");
+                int searchId = sc.nextInt();
+                boolean found = false;
+
+                for (Equipment e : list) {
+                    if (e.id == searchId) {
+                        e.display();
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("Equipment not found.");
+                }
+            }
+
+            else if (choice == 4) {
+                System.out.print("Enter Equipment ID to allocate: ");
+                int id = sc.nextInt();
+
+                System.out.print("Enter quantity: ");
+                int qty = sc.nextInt();
+
+                boolean found = false;
+
+                for (Equipment e : list) {
+                    if (e.id == id) {
+                        if (e.available >= qty) {
+                            e.available -= qty;
+                            System.out.println("Equipment allocated!");
+                        } else {
+                            System.out.println("Not enough equipment available.");
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("Equipment not found.");
+                }
+            }
+
+            else if (choice == 5) {
+                System.out.print("Enter Equipment ID to return: ");
+                int id = sc.nextInt();
+
+                System.out.print("Enter quantity: ");
+                int qty = sc.nextInt();
+
+                boolean found = false;
+
+                for (Equipment e : list) {
+                    if (e.id == id) {
+                        if (e.available + qty <= e.total) {
+                            e.available += qty;
+                            System.out.println("Equipment returned!");
+                        } else {
+                            System.out.println("Invalid return quantity.");
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("Equipment not found.");
+                }
+            }
+
+            else if (choice == 6) {
+                System.out.println("Exiting...");
+                break;
+            }
+
+            else {
+                System.out.println("Invalid choice!");
+            }
+        }
+
+        sc.close();
+    }
+}
