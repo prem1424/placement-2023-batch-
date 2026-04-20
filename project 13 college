@@ -1,0 +1,94 @@
+import java.util.*;
+
+// Student class
+class Student {
+    int id;
+    String name;
+    double marks;
+
+    Student(int id, String name, double marks) {
+        this.id = id;
+        this.name = name;
+        this.marks = marks;
+    }
+
+    void display() {
+        System.out.println("ID: " + id + "  Name: " + name + "  Marks: " + marks);
+    }
+}
+
+// Main class
+public class CollegeManagementSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Student> list = new ArrayList<>();
+
+        while (true) {
+            System.out.println("\n--- COLLEGE MANAGEMENT SYSTEM ---");
+            System.out.println("1. Add Student");
+            System.out.println("2. Display Students");
+            System.out.println("3. Search Student");
+            System.out.println("4. Exit");
+            System.out.print("Enter choice: ");
+
+            int choice = sc.nextInt();
+
+            if (choice == 1) {
+                System.out.print("Enter ID: ");
+                int id = sc.nextInt();
+
+                System.out.print("Enter Name: ");
+                String name = sc.next();
+
+                System.out.print("Enter Marks: ");
+                double marks = sc.nextDouble();
+
+                Student s = new Student(id, name, marks);
+                list.add(s);
+
+                System.out.println("Student added successfully!");
+            }
+
+            else if (choice == 2) {
+                if (list.isEmpty()) {
+                    System.out.println("No students found.");
+                } else {
+                    System.out.println("\nStudent List:");
+                    for (Student s : list) {
+                        s.display();
+                    }
+                }
+            }
+
+            else if (choice == 3) {
+                System.out.print("Enter ID to search: ");
+                int searchId = sc.nextInt();
+
+                boolean found = false;
+
+                for (Student s : list) {
+                    if (s.id == searchId) {
+                        s.display();
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("Student not found.");
+                }
+            }
+
+            else if (choice == 4) {
+                System.out.println("Exiting...");
+                break;
+            }
+
+            else {
+                System.out.println("Invalid choice!");
+            }
+        }
+
+        sc.close();
+    }
+}
